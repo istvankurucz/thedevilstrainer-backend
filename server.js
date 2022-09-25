@@ -16,9 +16,6 @@ import createCustomerMW from "./middlewares/customer/createCustomerMW.js";
 import getProductsMW from "./middlewares/product/getProductsMW.js";
 import chehkoutMW from "./middlewares/chehkoutMW.js";
 
-import fs from "fs";
-// import { collection, getDocs } from "firebase/firestore";
-
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -36,7 +33,7 @@ app.post("/checkout", getCustomerMW, createCustomerMW, getProductsMW, chehkoutMW
 // Fetch products
 app.get("/products", async function (req, res) {
 	try {
-		const products = await getDocs(collection(db, "products"));
+		const products = await getDocs(collection(db, "products/partner/products"));
 		res.json(
 			products.docs.map((product) => ({
 				id: product.id,
@@ -82,27 +79,6 @@ app.use((err, req, res, next) => {
 	res.end("Error...");
 	console.log(err);
 });
-
-async function writeData() {
-	try {
-		const exercises = await getDocs(collection(db, "homeExercises"));
-		exercises.docs.forEach((exercise) => {
-			const content = `${exercise.data().name};${exercise.data().place};${exercise.data().muscle};${
-				exercise.data().description
-			};${exercise.data().danger};${exercise.data().url};${JSON.stringify(exercise.data().plan3)};${JSON.stringify(
-				exercise.data().plan4
-			)};${JSON.stringify(exercise.data().plan5)}\n`;
-			fs.appendFile("/Users/ASUS/Documents/ReactJS/devilstrainer/backend/homeExercises.csv", content, (err) => {
-				if (err) console.log(err);
-			});
-		});
-		console.log("File writing was successful!");
-	} catch (e) {
-		console.log("Error.\n", e);
-	}
-}
-
-//writeData();
 
 // Listener
 app.listen(port, () => console.log(`Listening on port ${port}`));
