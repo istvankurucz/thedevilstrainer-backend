@@ -10,6 +10,7 @@ const router = express.Router();
 // Get the subscriptions of the customer
 router.get("/:id/subscriptions", getCustomerSubsMW, getProductSubMW);
 
+// Returns the Stripe customer-portal link
 router.get("/:id/portal", async (req, res) => {
 	const { id } = req.params;
 	const returnUrl = process.env.CLIENT_URL + "/profile";

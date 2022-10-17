@@ -10,7 +10,8 @@ async function getServiceDataMW(req, res, next) {
 
 		res.locals.service = {
 			id: service.id,
-			stripeId: service.data().stripeId,
+			productId: service.data().productId,
+			priceId: service.data().priceId,
 		};
 		next();
 	} catch (e) {

@@ -1,17 +1,17 @@
 import stripe from "../stripe.js";
 
-async function checkoutMW(req, res) {
+async function subscribeMW(req, res, next) {
 	const { service } = res.locals;
 
 	try {
-		const product = await stripe.products.retrieve(service.stripeId);
+		// const product = await stripe.products.retrieve(service.productId);
 
 		const session = await stripe.checkout.sessions.create({
 			customer: res.locals.customer.id,
 			mode: "subscription",
 			line_items: [
 				{
-					price: product.default_price,
+					price: service.priceId,
 					quantity: 1,
 				},
 			],
@@ -21,8 +21,9 @@ async function checkoutMW(req, res) {
 
 		res.json({ customerId: session.customer, url: session.url });
 	} catch (e) {
+		console.log(e);
 		res.end(e);
 	}
 }
 
-export default checkoutMW;
+export default subscribeMW;
